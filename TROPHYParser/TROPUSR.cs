@@ -408,7 +408,7 @@ namespace TROPHYParser
             {
                 get
                 {
-                    DateTime realDateTime = new DateTime(BitConverter.ToInt64(_listCreateTime, 0).ChangeEndian() * 10);
+                    DateTime realDateTime = (_listCreateTime == null ? new DateTime(0) : new DateTime(BitConverter.ToInt64(_listCreateTime, 0).ChangeEndian() * 10));
                     if (realDateTime.Ticks == 0)
                     {
                         return realDateTime;
@@ -426,6 +426,8 @@ namespace TROPHYParser
                     }
                     else
                     {
+                        if (_listCreateTime == null)
+                            _listCreateTime = new byte[16];
                         long temp = value.AddHours(-TimeZoneInfo.Local.BaseUtcOffset.Hours).Ticks;
                         Array.Copy(BitConverter.GetBytes((temp / 10).ChangeEndian()), 0, _listCreateTime, 0, 8);
                         Array.Copy(BitConverter.GetBytes((temp / 10).ChangeEndian()), 0, _listCreateTime, 8, 8);
@@ -440,7 +442,7 @@ namespace TROPHYParser
             {
                 get
                 {
-                    DateTime realDateTime = new DateTime(BitConverter.ToInt64(_listLastUpdateTime, 0).ChangeEndian() * 10);
+                    DateTime realDateTime = (_listLastUpdateTime == null ? new DateTime(0) : new DateTime(BitConverter.ToInt64(_listLastUpdateTime, 0).ChangeEndian() * 10));
                     if (realDateTime.Ticks == 0)
                     {
                         return realDateTime;
@@ -458,6 +460,8 @@ namespace TROPHYParser
                     }
                     else
                     {
+                        if (_listLastUpdateTime == null)
+                            _listLastUpdateTime = new byte[16];
                         long temp = value.AddHours(-TimeZoneInfo.Local.BaseUtcOffset.Hours).Ticks;
                         Array.Copy(BitConverter.GetBytes((temp / 10).ChangeEndian()), 0, _listLastUpdateTime, 0, 8);
                         Array.Copy(BitConverter.GetBytes((temp / 10).ChangeEndian()), 0, _listLastUpdateTime, 8, 8);
@@ -476,7 +480,7 @@ namespace TROPHYParser
             {
                 get
                 {
-                    DateTime realDateTime = new DateTime(BitConverter.ToInt64(_listLastGetTrophyTime, 0).ChangeEndian() * 10);
+                    DateTime realDateTime = (_listLastGetTrophyTime == null ? new DateTime(0) : new DateTime(BitConverter.ToInt64(_listLastGetTrophyTime, 0).ChangeEndian() * 10));
                     if (realDateTime.Ticks == 0)
                     {
                         return realDateTime;
@@ -488,6 +492,8 @@ namespace TROPHYParser
                 }
                 set
                 {
+                    if (_listLastGetTrophyTime == null)
+                        _listLastGetTrophyTime = new byte[16];
                     if (value.Ticks == 0)
                     {
                         Array.Clear(_listLastGetTrophyTime, 0, 16);

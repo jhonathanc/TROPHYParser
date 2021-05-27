@@ -10,8 +10,6 @@ namespace TROPHYParser
     {
         private const string TROPCONF_FILE_NAME = "TROPCONF.SFM";
 
-        int startByte = 0x40;
-        string path;
         string trophyconf_version;
         public string npcommid;
         public string trophyset_version;
@@ -46,10 +44,13 @@ namespace TROPHYParser
             if (!File.Exists(fileName))
                 throw new FileNotFoundException("File not found", TROPCONF_FILE_NAME);
 
-            this.path = path;
-
             byte[] data = File.ReadAllBytes(fileName);
-            data = data.SubArray(startByte, data.Length - startByte);
+            var idx = System.Text.Encoding.Default.GetString(data).IndexOf("<!--Sce-Np-Trophy-Signature:");
+
+            if (idx < 0)
+                throw new Exception("Invalid TROPCONF.DAT.");
+
+            data = data.SubArray(idx, data.Length - idx);
 
             XmlDocument xmldoc = new XmlDocument();
             xmldoc.LoadXml(Encoding.UTF8.GetString(data).Trim('\0'));
