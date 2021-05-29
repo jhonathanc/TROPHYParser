@@ -42,7 +42,7 @@ namespace TROPHYParser
         Header header;
         Dictionary<int, TypeRecord> typeRecordTable;
         List<TrophyInfo> trophyInfoTable = new List<TrophyInfo>();
-        public string account_id;
+        public byte[] account_id;
         public string trophy_id;
         int u1;
         int AllGetTrophysCount;
@@ -111,7 +111,7 @@ namespace TROPHYParser
                 // Type 2
                 TypeRecord account_id_Record = typeRecordTable[2];
                 TROPTRNSReader.BaseStream.Position = account_id_Record.Offset + 32; // 空行
-                account_id = Encoding.UTF8.GetString(TROPTRNSReader.ReadBytes(16));
+                account_id = TROPTRNSReader.ReadBytes(16);
 
                 // Type 3
                 TypeRecord trophy_id_Record = typeRecordTable[3];
@@ -150,7 +150,7 @@ namespace TROPHYParser
             {
                 Console.WriteLine(fk.Value);
             }
-            Console.WriteLine("account_id:{0}", account_id);
+            Console.WriteLine("account_id:{0}", Encoding.UTF8.GetString(account_id));
             Console.WriteLine("trophy_id:{0}", trophy_id);
 
             Console.WriteLine("Geted Trophys:{0} Sync Trophys:{1} ", AllGetTrophysCount, AllSyncPSNTrophyCount);
@@ -175,7 +175,7 @@ namespace TROPHYParser
                 TROPTRNSWriter.Write(header.StructToBytes());
                 TypeRecord account_id_Record = typeRecordTable[2];
                 TROPTRNSWriter.BaseStream.Position = account_id_Record.Offset + 32; // 空行
-                TROPTRNSWriter.Write(account_id.ToCharArray());
+                TROPTRNSWriter.Write(this.account_id);
 
                 TypeRecord trophy_id_Record = typeRecordTable[3];
                 TROPTRNSWriter.BaseStream.Position = trophy_id_Record.Offset + 16; // 空行

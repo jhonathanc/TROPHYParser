@@ -16,7 +16,7 @@ namespace TROPHYParser
         public List<TrophyType> trophyTypeTable = new List<TrophyType>();
         public List<TrophyTimeInfo> trophyTimeInfoTable = new List<TrophyTimeInfo>();
         public TrophyListInfo trophyListInfo;
-        public string account_id;
+        public byte[] account_id;
         public string trophy_id;
         public int all_trophy_number;
         byte[] unknowHash;
@@ -95,7 +95,7 @@ namespace TROPHYParser
                         case 1: // unknow
                             break;
                         case 2:
-                            account_id = Encoding.UTF8.GetString(blockdata, 16, 16);
+                            account_id = blockdata.SubArray(16, 16);
                             break;
                         case 3:
                             trophy_id = Encoding.UTF8.GetString(blockdata, 0, 16).Trim('\0');
@@ -171,7 +171,7 @@ namespace TROPHYParser
                 TROPUSRWriter.Write(header.StructToBytes());
                 TypeRecord account_id_Record = typeRecordTable[2];
                 TROPUSRWriter.BaseStream.Position = account_id_Record.Offset + 32; // 空行
-                TROPUSRWriter.Write(account_id.ToCharArray()); // 帳號
+                TROPUSRWriter.Write(this.account_id); // 帳號
 
                 TypeRecord trophy_id_Record = typeRecordTable[3];
                 TROPUSRWriter.BaseStream.Position = trophy_id_Record.Offset + 16;
